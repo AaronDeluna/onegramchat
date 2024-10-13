@@ -44,4 +44,13 @@ public class OneGramChat {
             throw new InvalidUserException("Неверное имя пользователя или пароль!");
         }
     }
+
+    public void logout() {
+        if (currentUser != null) {
+            System.out.println("Пользователь " + currentUser.getName() + "вышел");
+            currentUser = null;
+        } else {
+            System.out.println("Пользователь не вошел в систему");
+        }
+    }
 }
