@@ -13,10 +13,9 @@ public class OneGramChat {
     private Scanner scanner = new Scanner(System.in);
 
     public void createUser(){
-        System.out.println("Введите имя пользователя: ");
-        String name = scanner.nextLine();
-        System.out.println("Введите пароль: ");
-        String password = scanner.nextLine();
+        String[] details = scannerSystem();
+        String name = details[0];
+        String password = details[1];
 
         if (users.containsKey(name)) {
             System.out.println("Данное имя пользователя уже занятно!");
@@ -32,10 +31,9 @@ public class OneGramChat {
     }
 
     public void login() throws InvalidUserException {
-        System.out.println("Введите своё имя: ");
-        String name = scanner.nextLine();
-        System.out.println("Введите пароль: ");
-        String password = scanner.nextLine();
+        String[] details = scannerSystem();
+        String name = details[0];
+        String password = details[1];
 
         if (authenticate(name, password)) {
             currentUser = users.get(name);
@@ -52,5 +50,13 @@ public class OneGramChat {
         } else {
             System.out.println("Пользователь не вошел в систему");
         }
+    }
+
+    private String[] scannerSystem(){
+        System.out.println("Введите имя: ");
+        String name = scanner.nextLine();
+        System.out.println("Введите пароль: ");
+        String password = scanner.nextLine();
+        return new String[] {name, password};
     }
 }
