@@ -2,6 +2,7 @@ package com.javaacademy.onegramchat.chat;
 
 import com.javaacademy.onegramchat.entity.User;
 import com.javaacademy.onegramchat.exceptions.InvalidUserException;
+import com.javaacademy.onegramchat.ui.UserAuthenticationUi;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,12 +11,12 @@ import java.util.Scanner;
 public class OneGramChat {
     private Map<String, User> users = new HashMap<>();
     private User currentUser;
-    private Scanner scanner = new Scanner(System.in);
+    private UserAuthenticationUi userAuthenticationUi = new UserAuthenticationUi();
 
     public void createUser(){
-        String[] details = scannerSystem();
-        String name = details[0];
-        String password = details[1];
+        User credentials = userAuthenticationUi.inputUserCredentials();
+        String name = credentials.getName();
+        String password = credentials.getPassword();
 
         if (users.containsKey(name)) {
             System.out.println("Данное имя пользователя уже занятно!");
@@ -31,9 +32,9 @@ public class OneGramChat {
     }
 
     public void login() throws InvalidUserException {
-        String[] details = scannerSystem();
-        String name = details[0];
-        String password = details[1];
+        User credentials = userAuthenticationUi.inputUserCredentials();
+        String name = credentials.getName();
+        String password = credentials.getPassword();
 
         if (authenticate(name, password)) {
             currentUser = users.get(name);
@@ -50,13 +51,5 @@ public class OneGramChat {
         } else {
             System.out.println("Пользователь не вошел в систему");
         }
-    }
-
-    private String[] scannerSystem(){
-        System.out.println("Введите имя: ");
-        String name = scanner.nextLine();
-        System.out.println("Введите пароль: ");
-        String password = scanner.nextLine();
-        return new String[] {name, password};
     }
 }
