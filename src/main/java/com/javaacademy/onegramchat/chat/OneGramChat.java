@@ -1,55 +1,99 @@
 package com.javaacademy.onegramchat.chat;
 
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.InvalidUserException;
-import com.javaacademy.onegramchat.ui.UserAuthenticationUi;
+import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
+import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
+import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
+import com.javaacademy.onegramchat.validation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class OneGramChat {
-    private Map<String, User> users = new HashMap<>();
+    private static final Scanner scanner = new Scanner(System.in);
+    private final Map<String, User> users = new HashMap<>();
     private User currentUser;
-    private UserAuthenticationUi userAuthenticationUi = new UserAuthenticationUi();
 
-    public void createUser(){
-        User credentials = userAuthenticationUi.inputUserCredentials();
-        String name = credentials.getName();
-        String password = credentials.getPassword();
-
-        if (users.containsKey(name)) {
-            System.out.println("Данное имя пользователя уже занятно!");
-        } else {
-            users.put(name, new User(name, password));
-            System.out.println("Пользователь " + name + " создан!");
+    /**
+     * Создает нового пользователя, запрашивая имя и пароль.
+     * <p>
+     * Метод выполняет валидацию введенных данных и добавляет пользователя в систему.
+     * При ошибках выводит сообщение и повторяет запрос.
+     */
+    public void createUser() {
+        while (true) {
+            InputAuthorizationData inputAuthorizationData = userInputData();
+            try {
+                UserDataValidation.usernameIsAvailableValidate(inputAuthorizationData.getName(), users);
+                User user = new User(inputAuthorizationData.getName(), inputAuthorizationData.getPassword());
+                users.put(inputAuthorizationData.getName(), user);
+                System.out.println("Пользователь успешно зарегистрировался под именем: " +
+                        inputAuthorizationData.getName());
+                currentUser = user;
+                break;
+            } catch (UserRegistrationException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    public boolean authenticate(String name, String password) {
-        User user = users.get(name);
-        return user != null && user.getPassword().equals(password);
-    }
-
-    public void login() throws InvalidUserException {
-        User credentials = userAuthenticationUi.inputUserCredentials();
-        String name = credentials.getName();
-        String password = credentials.getPassword();
-
-        if (authenticate(name, password)) {
-            currentUser = users.get(name);
-            System.out.println("Вы вошли в аккаунт");
-        } else {
-            throw new InvalidUserException("Неверное имя пользователя или пароль!");
+    /**
+     * Авторизует пользователя, запрашивая имя и пароль.
+     * <p>
+     * Метод выполняет валидацию учетных данных и устанавливает текущего пользователя.
+     * При ошибках выводит сообщение и повторяет запрос.
+     */
+    public void userLogin() {
+        while (true) {
+            InputAuthorizationData inputAuthorizationData = userInputData();
+            try {
+                UserDataValidation.userAuthorizationValidate(inputAuthorizationData.getName(),
+                        inputAuthorizationData.getPassword(), users);
+                currentUser = users.get(inputAuthorizationData.getName());
+                System.out.println("Вы успешно авторизовались");
+                break;
+            } catch (UserAuthorizationException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
+    /**
+     * Выход текущего пользователя из системы.
+     * <p>
+     * Если пользователь авторизован, выводит сообщение о выходе и устанавливает текущего пользователя в null.
+     * Если пользователь не авторизован, выводит сообщение об этом.
+     */
     public void logout() {
         if (currentUser != null) {
             System.out.println("Пользователь " + currentUser.getName() + "вышел");
             currentUser = null;
         } else {
             System.out.println("Пользователь не вошел в систему");
+        }
+    }
+
+    /**
+     * Запрашивает у пользователя имя и пароль.
+     * <p>
+     * Метод выполняет валидацию введенных данных и возвращает их список, если данные корректны.
+     * При ошибках выводит сообщение и повторяет запрос.
+     *
+     * @return InputAuthorizationData объект с введенными учетными данными.
+     */
+    public InputAuthorizationData userInputData() {
+        while (true) {
+            System.out.println("Введите имя пользователя: ");
+            String name = scanner.nextLine().trim();
+            System.out.println("Введите пароль: ");
+            String password = scanner.nextLine().trim();
+            try {
+                UserDataValidation.inputDataValidate(name, password);
+                return new InputAuthorizationData(name, password);
+            } catch (ValidationInputDataException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }
