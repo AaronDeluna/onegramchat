@@ -4,10 +4,7 @@ import com.javaacademy.onegramchat.entity.User;
 import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
 import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
 import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
-import com.javaacademy.onegramchat.validation.InputAuthorizationData;
-import com.javaacademy.onegramchat.validation.UserAuthorizationValidator;
-import com.javaacademy.onegramchat.validation.UserInputValidator;
-import com.javaacademy.onegramchat.validation.UserNameValidator;
+import com.javaacademy.onegramchat.validation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +25,7 @@ public class OneGramChat {
         while (true) {
             InputAuthorizationData inputAuthorizationData = userInputData();
             try {
-                UserNameValidator.validateUsernameIsAvailable(inputAuthorizationData.getName(), users);
+                UserValidationUtils.usernameIsAvailableValidate(inputAuthorizationData.getName(), users);
                 User user = new User(inputAuthorizationData.getName(), inputAuthorizationData.getPassword());
                 users.put(inputAuthorizationData.getName(), user);
                 System.out.println("Пользователь успешно зарегистрировался под именем: " +
@@ -51,7 +48,7 @@ public class OneGramChat {
         while (true) {
             InputAuthorizationData inputAuthorizationData = userInputData();
             try {
-                UserAuthorizationValidator.validateUserCredentials(inputAuthorizationData.getName(),
+                UserValidationUtils.userAuthorizationValidate(inputAuthorizationData.getName(),
                         inputAuthorizationData.getPassword(), users);
                 currentUser = users.get(inputAuthorizationData.getName());
                 System.out.println("Вы успешно авторизовались");
@@ -92,7 +89,7 @@ public class OneGramChat {
             System.out.println("Введите пароль: ");
             String password = scanner.nextLine().trim();
             try {
-                UserInputValidator.validate(name, password);
+                UserValidationUtils.inputDataValidate(name, password);
                 return new InputAuthorizationData(name, password);
             } catch (ValidationInputDataException e) {
                 System.out.println(e.getMessage());
