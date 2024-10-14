@@ -9,19 +9,16 @@ import java.util.Map;
 public class UserRegistrationValidator {
 
     /**
-     * Проверяет корректность регистрации пользователя.
+     * Проверяет возможность регистрации пользователя по имени.
      *
-     * @param name имя пользователя.
-     * @param password пароль пользователя.
+     * @param name имя пользователя для регистрации.
      * @param users карта зарегистрированных пользователей.
-     * @return true, если регистрация успешна.
-     * @throws CredentialsValidationException если имя или пароль некорректны.
+     * @return true, если имя пользователя доступно для регистрации.
      * @throws UserRegistrationException если имя пользователя уже занято.
      */
-    public static boolean validateRegistration(String name, String password, Map<String, User> users)
-            throws CredentialsValidationException, UserRegistrationException {
+    public static boolean validateRegistration(String name, Map<String, User> users)
+            throws UserRegistrationException {
 
-        return UserInputValidator.validateCredentials(name, password)
-                && UserExistenceValidator.validateUsernameIsAvailable(name, users);
+        return UserExistenceValidator.validateUsernameIsAvailable(name, users);
     }
 }

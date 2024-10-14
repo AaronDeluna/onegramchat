@@ -8,7 +8,7 @@ import java.util.Map;
 public class UserPasswordValidator {
 
     /**
-     * Проверяет корректность пароля для указанного пользователя.
+     * Проверяет правильность пароля для указанного пользователя.
      *
      * @param name имя пользователя.
      * @param password пароль пользователя.
@@ -18,8 +18,8 @@ public class UserPasswordValidator {
      */
     public static boolean validatePassword(String name, String password, Map<String, User> users)
             throws InvalidPasswordException {
-        User user = users.get(name);
 
+        User user = users.get(name);
         if (user == null) {
             throw new InvalidPasswordException("Пользователь " + name + " не найден.");
         }

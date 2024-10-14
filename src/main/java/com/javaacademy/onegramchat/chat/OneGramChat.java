@@ -28,13 +28,13 @@ public class OneGramChat {
         while (true) {
             User user = userAuthInput();
             try {
-                if (UserRegistrationValidator.validateRegistration(user.getName(), user.getPassword(), users)) {
+                if (UserRegistrationValidator.validateRegistration(user.getName(), users)) {
                     System.out.println("Пользователь успешно зарегестрировался под именем: " + user.getName());
                     users.put(user.getName(), user);
                     currentUser = user;
                     break;
                 }
-            } catch (CredentialsValidationException | UserRegistrationException e) {
+            } catch (UserRegistrationException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -55,7 +55,7 @@ public class OneGramChat {
                     currentUser = user;
                     break;
                 }
-            } catch (InvalidPasswordException | UserAuthorizationException | CredentialsValidationException e) {
+            } catch (InvalidPasswordException | UserAuthorizationException e) {
                 System.out.println(e.getMessage());
             }
         }

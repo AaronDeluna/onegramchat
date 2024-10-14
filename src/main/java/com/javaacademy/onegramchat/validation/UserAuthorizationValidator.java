@@ -11,22 +11,17 @@ import java.util.Map;
 public class UserAuthorizationValidator {
 
     /**
-     * Проверяет учетные данные пользователя на корректность.
+     * Проверяет корректность учетных данных пользователя.
      *
      * @param name имя пользователя.
      * @param password пароль пользователя.
      * @param users карта зарегистрированных пользователей.
      * @return true, если данные корректны.
      * @throws InvalidPasswordException если пароль неверный.
-     * @throws CredentialsValidationException если данные некорректны.
      * @throws UserAuthorizationException если пользователь не зарегистрирован.
      */
     public static boolean validateUserCredentials(String name, String password, Map<String, User> users)
-            throws InvalidPasswordException, CredentialsValidationException, UserAuthorizationException {
-
-        if (!UserInputValidator.validateCredentials(name, password)) {
-            throw new CredentialsValidationException("Некорректные данные пользователя.");
-        }
+            throws InvalidPasswordException, UserAuthorizationException {
 
         User user = users.get(name);
         if (user == null) {
