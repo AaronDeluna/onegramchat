@@ -7,7 +7,7 @@ import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
 
 import java.util.Map;
 
-public class UserValidationUtils {
+public class UserDataValidation {
     public static final String EMPTY_NAME_MESSAGE = "Имя не может быть пустым, попробуйте еще раз.";
     public static final String EMPTY_PASSWORD_MESSAGE = "Пароль не может быть пустым, попробуйте еще раз.";
     public static final String USERNAME_TAKEN_MESSAGE = "Данное имя пользователя уже занято, попробуйте еще раз.";

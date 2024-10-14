@@ -25,7 +25,7 @@ public class OneGramChat {
         while (true) {
             InputAuthorizationData inputAuthorizationData = userInputData();
             try {
-                UserValidationUtils.usernameIsAvailableValidate(inputAuthorizationData.getName(), users);
+                UserDataValidation.usernameIsAvailableValidate(inputAuthorizationData.getName(), users);
                 User user = new User(inputAuthorizationData.getName(), inputAuthorizationData.getPassword());
                 users.put(inputAuthorizationData.getName(), user);
                 System.out.println("Пользователь успешно зарегистрировался под именем: " +
@@ -48,7 +48,7 @@ public class OneGramChat {
         while (true) {
             InputAuthorizationData inputAuthorizationData = userInputData();
             try {
-                UserValidationUtils.userAuthorizationValidate(inputAuthorizationData.getName(),
+                UserDataValidation.userAuthorizationValidate(inputAuthorizationData.getName(),
                         inputAuthorizationData.getPassword(), users);
                 currentUser = users.get(inputAuthorizationData.getName());
                 System.out.println("Вы успешно авторизовались");
@@ -89,7 +89,7 @@ public class OneGramChat {
             System.out.println("Введите пароль: ");
             String password = scanner.nextLine().trim();
             try {
-                UserValidationUtils.inputDataValidate(name, password);
+                UserDataValidation.inputDataValidate(name, password);
                 return new InputAuthorizationData(name, password);
             } catch (ValidationInputDataException e) {
                 System.out.println(e.getMessage());
