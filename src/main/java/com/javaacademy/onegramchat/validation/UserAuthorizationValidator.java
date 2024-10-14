@@ -1,7 +1,6 @@
 package com.javaacademy.onegramchat.validation;
 
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.InvalidPasswordException;
 import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
 
 import java.util.Map;
@@ -11,25 +10,25 @@ public class UserAuthorizationValidator {
     /**
      * Проверяет корректность учетных данных пользователя.
      *
-     * @param name имя пользователя.
+     * @param name     имя пользователя.
      * @param password пароль пользователя.
-     * @param users карта зарегистрированных пользователей.
-     * @return true, если данные корректны.
-     * @throws InvalidPasswordException если пароль неверный.
-     * @throws UserAuthorizationException если пользователь не зарегистрирован.
+     * @param users    карта зарегистрированных пользователей.
+     * @return user, возвращает пользователя если данные корректны.
+     * @throws UserAuthorizationException если пользователь не прошел авторизацию.
      */
-    public static boolean validateUserCredentials(String name, String password, Map<String, User> users)
-            throws InvalidPasswordException, UserAuthorizationException {
+    public static User validateUserCredentials(String name, String password, Map<String, User> users)
+            throws UserAuthorizationException {
 
-        User user = users.get(name);
-        if (user == null) {
+        if (!users.containsKey(name)) {
             throw new UserAuthorizationException("Пользователь с именем " + name + " не зарегистрирован.");
         }
 
-        if (!UserPasswordValidator.validatePassword(name, password, users)) {
-            throw new InvalidPasswordException("Неверный пароль для пользователя " + name);
+        User user = users.get(name);
+
+        if (!user.getPassword().equals(password)) {
+            throw new UserAuthorizationException("Неверный пароль для пользователя " + name);
         }
 
-        return true;
+        return user;
     }
 }

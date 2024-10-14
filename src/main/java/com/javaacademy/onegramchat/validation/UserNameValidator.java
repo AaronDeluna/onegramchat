@@ -5,22 +5,21 @@ import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
 
 import java.util.Map;
 
-public class UserExistenceValidator {
+public class UserNameValidator {
 
     public static final String USERNAME_TAKEN_MESSAGE = "Данное имя пользователя уже занято, попробуйте еще раз.";
 
     /**
      * Проверяет доступность имени пользователя для регистрации.
      *
-     * @param name имя пользователя для проверки.
+     * @param name  имя пользователя для проверки.
      * @param users карта зарегистрированных пользователей.
-     * @return true, если имя пользователя доступно.
      * @throws UserRegistrationException если имя пользователя уже занято.
      */
-    public static boolean validateUsernameIsAvailable(String name, Map<String, User> users) throws UserRegistrationException {
+    public static void validateUsernameIsAvailable(String name, Map<String, User> users)
+            throws UserRegistrationException {
         if (users.containsKey(name)) {
             throw new UserRegistrationException(USERNAME_TAKEN_MESSAGE);
         }
-        return true;
     }
 }
