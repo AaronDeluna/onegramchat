@@ -1,7 +1,6 @@
 package com.javaacademy.onegramchat.validation;
 
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.CredentialsValidationException;
 import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
 
 import java.util.Map;
