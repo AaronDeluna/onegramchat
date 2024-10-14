@@ -107,7 +107,7 @@ public class OneGramChat {
      * если такого пользователя нет, то возникает ошибка: такого пользователя нет
      * если текущего пользователя нет, то возникает ошибка: вы не авторизованы
      */
-    public void SendMessage() {
+    public void sendMessage() {
         if (currentUser != null) {
             while (true) {
                 System.out.println("Введите имя получателя сообщения: ");
@@ -119,8 +119,11 @@ public class OneGramChat {
 
                 currentUser.addMessage(new Message(messageText, MessageType.OUTCOMING, currentUser.getName(),
                         recipientUser.getName()));
-                recipientUser.addMessage(new Message (messageText, MessageType.INCOMING, currentUser.getName(),
+                recipientUser.addMessage(new Message(messageText, MessageType.INCOMING, currentUser.getName(),
                         recipientUser.getName()));
+
+                System.out.println("Сообщение отправлено");
+                break;
             }
         } else {
             System.out.println("Вы не авторизованы");
@@ -133,7 +136,7 @@ public class OneGramChat {
      * Метод выполняет валидацию имени пользователя и возвращает пользователя.
      * При ошибке выводит сообщение
      */
-    public User selectUser (String userName) {
+    public User selectUser(String userName) {
         try {
             UserDataValidation.usernameIsAvailableValidate(userName, users);
             return users.get(userName);
