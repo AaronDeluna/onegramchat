@@ -13,22 +13,17 @@ public class UserAuthorizationValidator {
      * @param name     имя пользователя.
      * @param password пароль пользователя.
      * @param users    карта зарегистрированных пользователей.
-     * @return user, возвращает пользователя если данные корректны.
      * @throws UserAuthorizationException если пользователь не прошел авторизацию.
      */
-    public static User validateUserCredentials(String name, String password, Map<String, User> users)
+    public static void validateUserCredentials(String name, String password, Map<String, User> users)
             throws UserAuthorizationException {
 
         if (!users.containsKey(name)) {
             throw new UserAuthorizationException("Пользователь с именем " + name + " не зарегистрирован.");
         }
 
-        User user = users.get(name);
-
-        if (!user.getPassword().equals(password)) {
+        if (!users.get(name).getPassword().equals(password)) {
             throw new UserAuthorizationException("Неверный пароль для пользователя " + name);
         }
-
-        return user;
     }
 }

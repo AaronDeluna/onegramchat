@@ -51,10 +51,10 @@ public class OneGramChat {
         while (true) {
             InputAuthorizationData inputAuthorizationData = userInputData();
             try {
-                User user = UserAuthorizationValidator.validateUserCredentials(inputAuthorizationData.getName(),
+                UserAuthorizationValidator.validateUserCredentials(inputAuthorizationData.getName(),
                         inputAuthorizationData.getPassword(), users);
+                currentUser = users.get(inputAuthorizationData.getName());
                 System.out.println("Вы успешно авторизовались");
-                currentUser = user;
                 break;
             } catch (UserAuthorizationException e) {
                 System.out.println(e.getMessage());
