@@ -77,7 +77,7 @@ public class OneGramChat {
     public void logout() {
         System.out.println("-------Выход пользователя-------");
         try {
-            checkUserAuthorization();
+            UserValidation.checkUserAuthorization(currentUser);
             System.out.println("Пользователь " + currentUser.getName() + " успешно вышел");
             currentUser = null;
         } catch (UserAuthorizationException e) {
@@ -116,7 +116,7 @@ public class OneGramChat {
     public void sendMessage() {
         System.out.println("-------Отправка сообщения-------");
         try {
-            checkUserAuthorization();
+            UserValidation.checkUserAuthorization(currentUser);
             InputMessageData inputMessageData = inputMessage();
             User recipientUser = findUserByName(inputMessageData.getRecipientName(), users);
             currentUser.addMessage(new Message(inputMessageData.getMessageText(),
@@ -149,17 +149,6 @@ public class OneGramChat {
             } catch (MessageInputException e) {
                 System.out.println(e.getMessage());
             }
-        }
-    }
-
-    /**
-     * Проверяет, авторизован ли пользователь.
-     *
-     * @throws UserAuthorizationException если текущий пользователь не авторизован.
-     */
-    private void checkUserAuthorization() throws UserAuthorizationException {
-        if (currentUser == null) {
-            throw new UserAuthorizationException("Вы не авторизованы!");
         }
     }
 
