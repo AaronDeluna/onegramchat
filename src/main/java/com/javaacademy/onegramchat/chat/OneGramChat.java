@@ -112,7 +112,7 @@ public class OneGramChat {
             recipientUser.addMessage(new Message(inputMessageData.getMessageText(),
                     MessageType.INCOMING, currentUser.getName(), recipientUser.getName()));
             System.out.println("Сообщение успешно отправлено пользователю: " + inputMessageData.getRecipientName());
-        } catch (UserNotFoundException e) {
+        } catch (UserAuthorizationException | UserNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -125,12 +125,8 @@ public class OneGramChat {
      * @return объект InputMessageData, содержащий имя получателя и текст сообщения.
      * @throws UserAuthorizationException если пользователь не авторизован.
      */
-    private InputMessageData inputMessage() {
-        try {
-            isUserAuthenticated();
-        } catch (UserAuthorizationException e) {
-            System.out.println(e.getMessage());
-        }
+    private InputMessageData inputMessage() throws UserAuthorizationException {
+        isUserAuthenticated();
         while (true) {
             System.out.println("Введите имя получателя сообщения: ");
             String recipientName = scanner.nextLine().trim();
