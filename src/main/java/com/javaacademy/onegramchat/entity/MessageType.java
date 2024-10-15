@@ -14,5 +14,5 @@ public enum MessageType {
     INCOMING("Входящее"),
     OUTCOMING("Исходящее");
 
-    String description;
+    String type;
 }

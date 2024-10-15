@@ -1,11 +1,10 @@
 package com.javaacademy.onegramchat.validation;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
-@Getter
-@RequiredArgsConstructor
+@Value
 public class InputMessageData {
-    private final String recipientName;
-    private final String messageText;
+
+    String recipientName;
+    String messageText;
 }
