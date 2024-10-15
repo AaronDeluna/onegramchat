@@ -12,7 +12,6 @@ import com.javaacademy.onegramchat.validation.UserValidation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
 public class OneGramChat {
     private static final Scanner scanner = new Scanner(System.in);
