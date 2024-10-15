@@ -210,26 +210,23 @@ public class OneGramChat {
      */
     public void startChat() {
         System.out.println("Мы приветствуем вас в нашем чате Gramchat!");
-        System.out.println("Варианты команд: войти, новый, выйти, написать, прочитать");
-        System.out.println("Для выхода введите: exit");
         while (true) {
+            System.out.println("Варианты команд: войти, новый, выйти, написать, прочитать");
+            System.out.println("Для выхода введите: exit");
             System.out.println("Введите команду чата:");
-            String command = scanner.nextLine().trim();
+            String command = scanner.nextLine().trim().toLowerCase();
 
             switch (command) {
-                case ("войти"): userLogin();
-                    break;
-                case ("новый"): createUser();
-                    break;
-                case ("выйти"): logout();
-                    break;
-                case ("написать"): sendMessage();
-                    break;
-                case ("прочитать"): readMessage();
-                    break;
-                case ("exit"): System.out.println("Жаль что так быстро покидаете наш чат. До свидания!");
+                case "войти" -> userLogin();
+                case "новый" -> createUser();
+                case "выйти" -> logout();
+                case "написать" -> sendMessage();
+                case "прочитать" -> readMessage();
+                case "exit" -> {
+                    System.out.println("Жаль что так быстро покидаете наш чат. До свидания!");
                     System.exit(0);
-                default: System.out.println("Неверная команда. Повторите ввод.");
+                }
+                default -> System.out.println("Неверная команда. Повторите ввод.");
             }
         }
     }
