@@ -1,13 +1,14 @@
 package com.javaacademy.onegramchat.validation;
 
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
+import com.javaacademy.onegramchat.exceptions.InvalidPasswordException;
+import com.javaacademy.onegramchat.exceptions.UserNotFoundException;
 import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
 import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
 
 import java.util.Map;
 
-public class UserDataValidation {
+public class UserValidation {
     public static final String EMPTY_NAME_MESSAGE = "Имя не может быть пустым, попробуйте еще раз.";
     public static final String EMPTY_PASSWORD_MESSAGE = "Пароль не может быть пустым, попробуйте еще раз.";
     public static final String USERNAME_TAKEN_MESSAGE = "Данное имя пользователя уже занято, попробуйте еще раз.";
@@ -36,10 +37,26 @@ public class UserDataValidation {
      * @param users карта зарегистрированных пользователей.
      * @throws UserRegistrationException если имя пользователя уже занято.
      */
-    public static void usernameIsAvailableValidate(String name, Map<String, User> users)
+    public static void checkNotAvailableUsernameTo(String name, Map<String, User> users)
             throws UserRegistrationException {
+
         if (users.containsKey(name)) {
             throw new UserRegistrationException(USERNAME_TAKEN_MESSAGE);
+        }
+    }
+
+    /**
+     * Проверяет корректность учетных данных пользователя.
+     *
+     * @param name  имя пользователя.
+     * @param users карта зарегистрированных пользователей.
+     * @throws UserNotFoundException если пользователь не прошел авторизацию.
+     */
+    public static void checkAvailableUsernameTo(String name, Map<String, User> users)
+            throws UserNotFoundException {
+
+        if (!users.containsKey(name)) {
+            throw new UserNotFoundException("Пользователь с именем " + name + " не зарегистрирован.");
         }
     }
 
@@ -49,17 +66,13 @@ public class UserDataValidation {
      * @param name     имя пользователя.
      * @param password пароль пользователя.
      * @param users    карта зарегистрированных пользователей.
-     * @throws UserAuthorizationException если пользователь не прошел авторизацию.
+     * @throws InvalidPasswordException если пользователь не прошел авторизацию.
      */
-    public static void userAuthorizationValidate(String name, String password, Map<String, User> users)
-            throws UserAuthorizationException {
-
-        if (!users.containsKey(name)) {
-            throw new UserAuthorizationException("Пользователь с именем " + name + " не зарегистрирован.");
-        }
+    public static void checkVerifyingPassword(String name, String password, Map<String, User> users)
+            throws InvalidPasswordException {
 
         if (!users.get(name).getPassword().equals(password)) {
-            throw new UserAuthorizationException("Неверный пароль для пользователя " + name);
+            throw new InvalidPasswordException("Неверный пароль для пользователя " + name);
         }
     }
 }
