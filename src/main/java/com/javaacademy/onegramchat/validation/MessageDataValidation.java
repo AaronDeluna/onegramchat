@@ -33,7 +33,7 @@ public class MessageDataValidation {
      */
     public static void userExistValidation(String name, Map<String, User> users)
             throws UserNotFoundException {
-        if (users.containsKey(name)) {
+        if (!users.containsKey(name)) {
             throw new UserNotFoundException("Пользователь: " + name + " не найден");
         }
     }
