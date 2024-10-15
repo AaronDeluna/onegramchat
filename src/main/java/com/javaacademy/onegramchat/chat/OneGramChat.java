@@ -187,9 +187,11 @@ public class OneGramChat {
             checkUserAuthorization();
             for (Message message : currentUser.getMessages()) {
                 if (message.getType() == MessageType.OUTCOMING) {
-                    System.out.printf("письмо от %s: %s \n",message.getFrom(),message.getText());
-                } else  {
-                    System.out.printf("письмо к %s: %s \n",message.getTo(),message.getText());
+                    System.out.printf("письмо от %s: %s \n", message.getFrom(), message.getText());
+                } else if (message.getType() == MessageType.INCOMING) {
+                    System.out.printf("письмо к %s: %s \n", message.getTo(), message.getText());
+                } else {
+                    System.out.println("У вас нет доступных сообщений");
                 }
             }
         } catch (UserAuthorizationException e) {
