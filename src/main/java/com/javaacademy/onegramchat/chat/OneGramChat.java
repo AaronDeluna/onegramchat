@@ -1,5 +1,7 @@
 package com.javaacademy.onegramchat.chat;
 
+import com.javaacademy.onegramchat.entity.Message;
+import com.javaacademy.onegramchat.entity.MessageType;
 import com.javaacademy.onegramchat.entity.User;
 import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
 import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
@@ -94,6 +96,52 @@ public class OneGramChat {
             } catch (ValidationInputDataException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    /**
+     * Метод отправки сообщения
+     * Вводится имя пользователя, вводится текст письма.
+     * У текущего пользователя записывается в список сообщений как исходящий
+     * У пользователя которому пишем, записывается в список сообщений как входящее
+     * если такого пользователя нет, то возникает ошибка: такого пользователя нет
+     * если текущего пользователя нет, то возникает ошибка: вы не авторизованы
+     */
+    public void sendMessage() {
+        if (currentUser != null) {
+            while (true) {
+                System.out.println("Введите имя получателя сообщения: ");
+                String recipientName = scanner.nextLine().trim();
+                User recipientUser = selectUser(recipientName);
+
+                System.out.println("Введите текст: ");
+                String messageText = scanner.nextLine().trim();
+
+                currentUser.addMessage(new Message(messageText, MessageType.OUTCOMING, currentUser.getName(),
+                        recipientUser.getName()));
+                recipientUser.addMessage(new Message(messageText, MessageType.INCOMING, currentUser.getName(),
+                        recipientUser.getName()));
+
+                System.out.println("Сообщение отправлено");
+                break;
+            }
+        } else {
+            System.out.println("Вы не авторизованы");
+        }
+
+    }
+
+    /**
+     * Метод выбора пользователя по имени из списка
+     * Метод выполняет валидацию имени пользователя и возвращает пользователя.
+     * При ошибке выводит сообщение
+     */
+    public User selectUser(String userName) {
+        try {
+            UserDataValidation.usernameIsAvailableValidate(userName, users);
+            return users.get(userName);
+        } catch (UserRegistrationException e) {
+            throw new RuntimeException(e);
         }
     }
 }
