@@ -54,6 +54,9 @@ public class OneGramChat {
                 System.out.println("Вы успешно авторизовались");
                 break;
             } catch (UserAuthorizationException e) {
+                System.out.println(e.getMessage() + "Чтобы продолжить зарегестрируйтесь:");
+                createUser();
+            } catch (InvalidPasswordException e) {
                 System.out.println(e.getMessage());
             }
         }

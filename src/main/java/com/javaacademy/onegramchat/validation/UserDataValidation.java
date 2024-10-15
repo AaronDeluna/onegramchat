@@ -1,6 +1,7 @@
 package com.javaacademy.onegramchat.validation;
 
 import com.javaacademy.onegramchat.entity.User;
+import com.javaacademy.onegramchat.exceptions.InvalidPasswordException;
 import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
 import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
 import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
@@ -52,14 +53,14 @@ public class UserDataValidation {
      * @throws UserAuthorizationException если пользователь не прошел авторизацию.
      */
     public static void userAuthorizationValidate(String name, String password, Map<String, User> users)
-            throws UserAuthorizationException {
+            throws UserAuthorizationException, InvalidPasswordException {
 
         if (!users.containsKey(name)) {
-            throw new UserAuthorizationException("Пользователь с именем " + name + " не зарегистрирован.");
+            throw new UserAuthorizationException("Пользователь с именем " + name + " не зарегистрирован." );
         }
 
         if (!users.get(name).getPassword().equals(password)) {
-            throw new UserAuthorizationException("Неверный пароль для пользователя " + name);
+            throw new InvalidPasswordException("Неверный пароль для пользователя " + name);
         }
     }
 }
