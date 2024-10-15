@@ -3,9 +3,7 @@ package com.javaacademy.onegramchat.chat;
 import com.javaacademy.onegramchat.entity.Message;
 import com.javaacademy.onegramchat.entity.MessageType;
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
-import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
-import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
+import com.javaacademy.onegramchat.exceptions.*;
 import com.javaacademy.onegramchat.validation.*;
 
 import java.util.HashMap;
@@ -68,11 +66,12 @@ public class OneGramChat {
      * Если пользователь не авторизован, выводит сообщение об этом.
      */
     public void logout() {
-        if (currentUser != null) {
-            System.out.println("Пользователь " + currentUser.getName() + "вышел");
+        try {
+            isUserAuthenticated();
+            System.out.println("Пользователь " + currentUser.getName() + " успешно вышел");
             currentUser = null;
-        } else {
-            System.out.println("Пользователь не вошел в систему");
+        } catch (UserAuthorizationException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -100,48 +99,70 @@ public class OneGramChat {
     }
 
     /**
-     * Метод отправки сообщения
-     * Вводится имя пользователя, вводится текст письма.
-     * У текущего пользователя записывается в список сообщений как исходящий
-     * У пользователя которому пишем, записывается в список сообщений как входящее
-     * если такого пользователя нет, то возникает ошибка: такого пользователя нет
-     * если текущего пользователя нет, то возникает ошибка: вы не авторизованы
+     * Отправляет сообщение указанному получателю.
+     *
+     * @throws UserNotFoundException если получатель не найден.
      */
     public void sendMessage() {
-        if (currentUser != null) {
-            while (true) {
-                System.out.println("Введите имя получателя сообщения: ");
-                String recipientName = scanner.nextLine().trim();
-                User recipientUser = selectUser(recipientName);
-
-                System.out.println("Введите текст: ");
-                String messageText = scanner.nextLine().trim();
-
-                currentUser.addMessage(new Message(messageText, MessageType.OUTCOMING, currentUser.getName(),
-                        recipientUser.getName()));
-                recipientUser.addMessage(new Message(messageText, MessageType.INCOMING, currentUser.getName(),
-                        recipientUser.getName()));
-
-                System.out.println("Сообщение отправлено");
-                break;
-            }
-        } else {
-            System.out.println("Вы не авторизованы");
+        try {
+            InputMessageData inputMessageData = inputMessage();
+            User recipientUser = findUserByName(inputMessageData.getRecipientName());
+            currentUser.addMessage(new Message(inputMessageData.getMessageText(),
+                    MessageType.OUTCOMING, currentUser.getName(), recipientUser.getName()));
+            recipientUser.addMessage(new Message(inputMessageData.getMessageText(),
+                    MessageType.INCOMING, currentUser.getName(), recipientUser.getName()));
+            System.out.println("Сообщение успешно отправлено пользователю: " + inputMessageData.getRecipientName());
+        } catch (UserNotFoundException e) {
+            System.out.println(e.getMessage());
         }
-
     }
 
     /**
-     * Метод выбора пользователя по имени из списка
-     * Метод выполняет валидацию имени пользователя и возвращает пользователя.
-     * При ошибке выводит сообщение
+     * Обрабатывает ввод данных для отправки сообщения.
+     * Запрашивает имя получателя и текст сообщения у авторизованного пользователя.
+     *
+     * @return объект InputMessageData с именем получателя и текстом сообщения.
      */
-    public User selectUser(String userName) {
+    private InputMessageData inputMessage() {
         try {
-            UserDataValidation.usernameIsAvailableValidate(userName, users);
-            return users.get(userName);
-        } catch (UserRegistrationException e) {
-            throw new RuntimeException(e);
+            isUserAuthenticated();
+        } catch (UserAuthorizationException e) {
+            System.out.println(e.getMessage());
         }
+        while (true) {
+            System.out.println("Введите имя получателя сообщения: ");
+            String recipientName = scanner.nextLine().trim();
+            System.out.println("Введите текст: ");
+            String messageText = scanner.nextLine().trim();
+            try {
+                MessageDataValidation.massageInputValidation(recipientName, messageText);
+                return new InputMessageData(recipientName, messageText);
+            } catch (MessageInputException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Проверяет, авторизован ли пользователь.
+     *
+     * @throws UserAuthorizationException если текущий пользователь не авторизован.
+     */
+    private void isUserAuthenticated() throws UserAuthorizationException {
+        if (currentUser == null) {
+            throw new UserAuthorizationException("Вы не авторизованы!");
+        }
+    }
+
+    /**
+     * Находит пользователя по имени.
+     *
+     * @param userName имя пользователя для поиска.
+     * @return найденный пользователь.
+     * @throws UserNotFoundException если пользователь не найден.
+     */
+    private User findUserByName(String userName) throws UserNotFoundException {
+        MessageDataValidation.userExistValidation(userName, users);
+        return users.get(userName);
     }
 }
