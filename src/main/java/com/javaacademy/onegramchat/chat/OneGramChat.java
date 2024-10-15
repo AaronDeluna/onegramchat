@@ -12,7 +12,6 @@ import com.javaacademy.onegramchat.validation.UserValidation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
 public class OneGramChat {
     private static final Scanner scanner = new Scanner(System.in);
@@ -196,6 +195,39 @@ public class OneGramChat {
             }
         } catch (UserAuthorizationException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     *  метод "запуска чата":
+     * чат постоянно ожидает команд из консоли:
+     * "войти" - запуск функции "войти пользователю"
+     * "новый" - запуск функции "создать пользователя"
+     * "выйти" - запуск функции "выйти пользователю"
+     * "написать" - запуск функции "написать письмо"
+     * "прочитать" - запуск функции "прочитать письмо"
+     * "exit" - окончание работы программы
+     */
+    public void startChat() {
+        System.out.println("Мы приветствуем вас в нашем чате Gramchat!");
+        while (true) {
+            System.out.println("Варианты команд: войти, новый, выйти, написать, прочитать");
+            System.out.println("Для выхода введите: exit");
+            System.out.println("Введите команду чата:");
+            String command = scanner.nextLine().trim().toLowerCase();
+
+            switch (command) {
+                case "войти" -> userLogin();
+                case "новый" -> createUser();
+                case "выйти" -> logout();
+                case "написать" -> sendMessage();
+                case "прочитать" -> readMessage();
+                case "exit" -> {
+                    System.out.println("Жаль что так быстро покидаете наш чат. До свидания!");
+                    System.exit(0);
+                }
+                default -> System.out.println("Неверная команда. Повторите ввод.");
+            }
         }
     }
 }
