@@ -12,6 +12,7 @@ import com.javaacademy.onegramchat.validation.UserValidation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class OneGramChat {
     private static final Scanner scanner = new Scanner(System.in);
@@ -173,5 +174,26 @@ public class OneGramChat {
     private User findUserByName(String userName, Map<String, User> users) throws UserNotFoundException {
         UserValidation.checkAvailableUsernameTo(userName, users);
         return users.get(userName);
+    }
+
+    /**
+     * метод "Прочитать письма":
+     * Выводит все письма текущего пользователя.     *
+     * если текущего пользователя нет, то возникает ошибка: вы не авторизованы
+     */
+    public void readMessage() {
+        System.out.println("-------Список сообщений-------");
+        try {
+            checkUserAuthorization();
+            for (Message message : currentUser.getMessages()) {
+                if (message.getType() == MessageType.OUTCOMING) {
+                    System.out.printf("письмо от %s: %s \n",message.getFrom(),message.getText());
+                } else  {
+                    System.out.printf("письмо к %s: %s \n",message.getTo(),message.getText());
+                }
+            }
+        } catch (UserAuthorizationException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
