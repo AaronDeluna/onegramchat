@@ -1,10 +1,7 @@
 package com.javaacademy.onegramchat.validation;
 
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.InvalidPasswordException;
-import com.javaacademy.onegramchat.exceptions.UserNotFoundException;
-import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
-import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
+import com.javaacademy.onegramchat.exceptions.*;
 
 import java.util.Map;
 
@@ -73,6 +70,17 @@ public class UserValidation {
 
         if (!users.get(name).getPassword().equals(password)) {
             throw new InvalidPasswordException("Неверный пароль для пользователя " + name);
+        }
+    }
+
+    /**
+     * Проверяет, авторизован ли пользователь.
+     *
+     * @throws UserAuthorizationException если текущий пользователь не авторизован.
+     */
+    public static void checkUserAuthorization(User currentUser) throws UserAuthorizationException {
+        if (currentUser == null) {
+            throw new UserAuthorizationException("Вы не авторизованы!");
         }
     }
 }
