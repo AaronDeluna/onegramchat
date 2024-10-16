@@ -203,12 +203,20 @@ public class OneGramChat {
                 case "выйти" -> logout();
                 case "написать" -> sendMessage();
                 case "прочитать" -> readMessage();
-                case "exit" -> {
-                    System.out.println("Жаль что так быстро покидаете наш чат. До свидания!");
-                    System.exit(0);
-                }
+                case "exit" -> exitChat();
                 default -> System.out.println("Неверная команда. Повторите ввод.");
             }
         }
+    }
+
+    /**
+     * Завершает работу чата и выводит прощальное сообщение.
+     *
+     * <p>Метод завершает выполнение программы.</p>
+     */
+    private void exitChat() {
+        System.out.println("Жаль, что так быстро покидаете наш чат. До свидания!");
+        scanner.close();
+        System.exit(0);
     }
 }

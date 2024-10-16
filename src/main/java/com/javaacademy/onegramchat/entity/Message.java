@@ -18,11 +18,10 @@ public class Message {
      * Входящие: выводится информация о получателе.
      */
     public void print() {
-        if (type.equals(MessageType.OUTCOMING)) {
-            System.out.printf("письмо от %s: %s \n", from, text);
-        }
-        if (type.equals(MessageType.INCOMING)) {
-            System.out.printf("письмо к %s: %s \n", to, text);
+        switch (type) {
+            case OUTCOMING -> System.out.printf("письмо от %s: %s \n", from, text);
+            case INCOMING -> System.out.printf("письмо к %s: %s \n", to, text);
+            default -> System.out.println("Неизвестный тип сообщения");
         }
     }
 }
