@@ -8,6 +8,7 @@ import java.util.List;
 
 @Value
 public class User {
+
     String name;
     String password;
     List<Message> messages = new ArrayList<>();

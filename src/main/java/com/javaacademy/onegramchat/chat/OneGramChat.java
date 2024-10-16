@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class OneGramChat {
+
     private static final Scanner scanner = new Scanner(System.in);
     private final Map<String, User> users = new HashMap<>();
     private User currentUser;
