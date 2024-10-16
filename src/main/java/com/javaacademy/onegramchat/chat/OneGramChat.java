@@ -172,7 +172,7 @@ public class OneGramChat {
     public void readMessage() {
         System.out.println("-------Список сообщений-------");
         try {
-            checkUserAuthorization();
+            UserValidation.checkUserAuthorization(currentUser);
             for (Message message : currentUser.getMessages()) {
                 if (message.getType() == MessageType.OUTCOMING) {
                     System.out.printf("письмо от %s: %s \n", message.getFrom(), message.getText());
