@@ -193,9 +193,7 @@ public class OneGramChat {
     public void startChat() {
         System.out.println("Мы приветствуем вас в нашем чате Gramchat!");
         while (true) {
-            System.out.println("Варианты команд: войти, новый, выйти, написать, прочитать");
-            System.out.println("Для выхода введите: exit");
-            System.out.println("Введите команду чата:");
+            printMenu();
             String command = scanner.nextLine().trim().toLowerCase();
 
             switch (command) {
@@ -209,6 +207,20 @@ public class OneGramChat {
             }
         }
     }
+
+    /**
+     * Выводит меню команд чата на экран.
+     *
+     * <p>Отображает доступные команды и инструкцию для выхода.</p>
+     */
+    private void printMenu() {
+        System.out.println("\n" + "-".repeat(60));
+        System.out.println("Варианты команд: войти, новый, выйти, написать, прочитать");
+        System.out.println("Для выхода введите: exit");
+        System.out.println("-".repeat(60));
+        System.out.print("Введите команду чата: ");
+    }
+
 
     /**
      * Завершает работу чата и выводит прощальное сообщение.
