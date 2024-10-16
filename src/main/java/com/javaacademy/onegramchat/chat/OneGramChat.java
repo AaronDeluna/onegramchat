@@ -93,7 +93,7 @@ public class OneGramChat {
      *
      * @return InputAuthorizationData объект с введенными учетными данными.
      */
-    public InputAuthorizationData userInputData() {
+    private InputAuthorizationData userInputData() {
         while (true) {
             System.out.println("Введите имя пользователя: ");
             String name = scanner.nextLine().trim();
@@ -168,14 +168,14 @@ public class OneGramChat {
      * Выводит список сообщений текущего пользователя.
      *
      * @throws UserAuthorizationException если пользователь не авторизован
-     * @throws NoMessagesException если у пользователя нет сообщений
+     * @throws NoMessagesException        если у пользователя нет сообщений
      */
     public void readMessage() {
         System.out.println("-------Список сообщений-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
             MessageValidation.verifyUserMessages(currentUser);
-            Message.printMessages(currentUser.getMessages());
+            currentUser.getMessages().forEach(Message::print);
         } catch (UserAuthorizationException | NoMessagesException e) {
             System.out.println(e.getMessage());
         }
