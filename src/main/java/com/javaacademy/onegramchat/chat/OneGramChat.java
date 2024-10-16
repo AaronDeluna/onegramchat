@@ -34,7 +34,6 @@ public class OneGramChat {
                 users.put(inputAuthorizationData.getName(), user);
                 System.out.println("Пользователь успешно зарегистрировался под именем: " +
                         inputAuthorizationData.getName());
-                currentUser = user;
                 break;
             } catch (UserRegistrationException e) {
                 System.out.println(e.getMessage());
@@ -93,7 +92,7 @@ public class OneGramChat {
      *
      * @return InputAuthorizationData объект с введенными учетными данными.
      */
-    public InputAuthorizationData userInputData() {
+    private InputAuthorizationData userInputData() {
         while (true) {
             System.out.println("Введите имя пользователя: ");
             String name = scanner.nextLine().trim();
@@ -165,37 +164,30 @@ public class OneGramChat {
     }
 
     /**
-     * метод "Прочитать письма":
-     * Выводит все письма текущего пользователя.     *
-     * если текущего пользователя нет, то возникает ошибка: вы не авторизованы
+     * Выводит список сообщений текущего пользователя.
+     *
+     * @throws UserAuthorizationException если пользователь не авторизован
+     * @throws NoMessagesException        если у пользователя нет сообщений
      */
     public void readMessage() {
         System.out.println("-------Список сообщений-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
-            for (Message message : currentUser.getMessages()) {
-                if (message.getType() == MessageType.OUTCOMING) {
-                    System.out.printf("письмо от %s: %s \n", message.getFrom(), message.getText());
-                } else if (message.getType() == MessageType.INCOMING) {
-                    System.out.printf("письмо к %s: %s \n", message.getTo(), message.getText());
-                } else {
-                    System.out.println("У вас нет доступных сообщений");
-                }
-            }
-        } catch (UserAuthorizationException e) {
+            MessageValidation.verifyUserMessages(currentUser);
+            currentUser.getMessages().forEach(Message::print);
+        } catch (UserAuthorizationException | NoMessagesException e) {
             System.out.println(e.getMessage());
         }
     }
 
     /**
-     *  метод "запуска чата":
-     * чат постоянно ожидает команд из консоли:
-     * "войти" - запуск функции "войти пользователю"
-     * "новый" - запуск функции "создать пользователя"
-     * "выйти" - запуск функции "выйти пользователю"
-     * "написать" - запуск функции "написать письмо"
-     * "прочитать" - запуск функции "прочитать письмо"
-     * "exit" - окончание работы программы
+     * Основной метод чата. Обрабатывает команды пользователя:
+     * - "войти" для авторизации,
+     * - "новый" для регистрации,
+     * - "выйти" для выхода из аккаунта,
+     * - "написать" для отправки сообщения,
+     * - "прочитать" для чтения сообщений,
+     * - "exit" для выхода из чата.
      */
     public void startChat() {
         System.out.println("Мы приветствуем вас в нашем чате Gramchat!");
@@ -211,12 +203,20 @@ public class OneGramChat {
                 case "выйти" -> logout();
                 case "написать" -> sendMessage();
                 case "прочитать" -> readMessage();
-                case "exit" -> {
-                    System.out.println("Жаль что так быстро покидаете наш чат. До свидания!");
-                    System.exit(0);
-                }
+                case "exit" -> exitChat();
                 default -> System.out.println("Неверная команда. Повторите ввод.");
             }
         }
+    }
+
+    /**
+     * Завершает работу чата и выводит прощальное сообщение.
+     *
+     * <p>Метод завершает выполнение программы.</p>
+     */
+    private void exitChat() {
+        System.out.println("Жаль, что так быстро покидаете наш чат. До свидания!");
+        scanner.close();
+        System.exit(0);
     }
 }
