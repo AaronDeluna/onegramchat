@@ -34,7 +34,6 @@ public class OneGramChat {
                 users.put(inputAuthorizationData.getName(), user);
                 System.out.println("Пользователь успешно зарегистрировался под именем: " +
                         inputAuthorizationData.getName());
-                currentUser = user;
                 break;
             } catch (UserRegistrationException e) {
                 System.out.println(e.getMessage());
