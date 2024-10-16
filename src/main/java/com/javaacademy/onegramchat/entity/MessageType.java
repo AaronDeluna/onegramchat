@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
 public enum MessageType {
+
     INCOMING("Входящее"),
     OUTCOMING("Исходящее");
 
