@@ -10,16 +10,14 @@ import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
 import com.javaacademy.onegramchat.exceptions.UserNotFoundException;
 import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
 import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
-import com.javaacademy.onegramchat.validation.InputAuthorizationData;
-import com.javaacademy.onegramchat.validation.InputMessageData;
+import com.javaacademy.onegramchat.validation.data.InputAuthorizationData;
+import com.javaacademy.onegramchat.validation.data.InputMessageData;
 import com.javaacademy.onegramchat.validation.MessageValidation;
 import com.javaacademy.onegramchat.validation.UserValidation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
-import static com.javaacademy.onegramchat.validation.UserValidation.checkSystemOccupiedAnotherUser;
 
 public class OneGramChat {
 
@@ -57,7 +55,7 @@ public class OneGramChat {
      */
     public void userLogin() {
         try {
-            checkSystemOccupiedAnotherUser(currentUser);
+            UserValidation.checkSystemOccupiedAnotherUser(currentUser);
             System.out.println("-------Авторизация пользователя-------");
             InputAuthorizationData inputAuthorizationData = userInputData();
             User user = findUserByName(inputAuthorizationData.getName(), users);

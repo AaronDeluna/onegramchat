@@ -1,4 +1,4 @@
-package com.javaacademy.onegramchat.validation;
+package com.javaacademy.onegramchat.validation.data;
 
 import lombok.Value;
 
