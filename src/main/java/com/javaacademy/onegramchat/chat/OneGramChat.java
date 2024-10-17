@@ -72,9 +72,9 @@ public class OneGramChat {
      * Если пользователь не авторизован, выводит сообщение об этом.
      */
     public void logout() {
-        System.out.println("-------Выход пользователя-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
+            System.out.println("-------Выход пользователя-------");
             System.out.println("Пользователь " + currentUser.getName() + " успешно вышел");
             currentUser = null;
         } catch (UserAuthorizationException e) {
