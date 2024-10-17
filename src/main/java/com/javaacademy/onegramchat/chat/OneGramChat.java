@@ -111,9 +111,9 @@ public class OneGramChat {
      * как исходящее для отправителя и входящее для получателя.
      */
     public void sendMessage() {
-        System.out.println("-------Отправка сообщения-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
+            System.out.println("-------Отправка сообщения-------");
             InputMessageData inputMessageData = inputMessage();
             User recipientUser = findUserByName(inputMessageData.getRecipientName(), users);
             currentUser.addMessage(new Message(inputMessageData.getMessageText(),
