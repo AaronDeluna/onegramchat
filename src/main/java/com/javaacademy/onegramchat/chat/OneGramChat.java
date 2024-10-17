@@ -41,8 +41,7 @@ public class OneGramChat {
                 UserValidation.checkNotAvailableUsernameTo(inputAuthorizationData.getName(), users);
                 User user = new User(inputAuthorizationData.getName(), inputAuthorizationData.getPassword());
                 users.put(user.getName(), user);
-                System.out.println("Пользователь успешно зарегистрировался под именем: " +
-                        inputAuthorizationData.getName());
+                System.out.println("Пользователь успешно зарегистрировался под именем: " + user.getName());
                 break;
             } catch (UserRegistrationException e) {
                 System.out.println(e.getMessage());

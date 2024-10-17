@@ -72,7 +72,7 @@ public class UserValidation {
     public static void checkVerifyingPassword(User user, String password)
             throws InvalidPasswordException {
 
-        if (user.getPassword().equals(password)) {
+        if (!user.getPassword().equals(password)) {
             throw new InvalidPasswordException("Неверный пароль для пользователя " + user.getName());
         }
     }
