@@ -49,22 +49,16 @@ public class OneGramChat {
      * При ошибках выводит сообщение и повторяет запрос.
      */
     public void userLogin() {
-        while (true) {
-            System.out.println("-------Авторизация пользователя-------");
-            InputAuthorizationData inputAuthorizationData = userInputData();
-            try {
-                UserValidation.checkAvailableUsernameTo(inputAuthorizationData.getName(), users);
-                UserValidation.checkVerifyingPassword(inputAuthorizationData.getName(),
-                        inputAuthorizationData.getPassword(), users);
-                currentUser = users.get(inputAuthorizationData.getName());
-                System.out.println("Вы успешно авторизовались");
-                break;
-            } catch (UserNotFoundException e) {
-                System.out.println(e.getMessage() + "\nЧтобы продолжить зарегистрируйтесь!");
-                createUser();
-            } catch (InvalidPasswordException e) {
-                System.out.println(e.getMessage());
-            }
+        System.out.println("-------Авторизация пользователя-------");
+        InputAuthorizationData inputAuthorizationData = userInputData();
+        try {
+            UserValidation.checkAvailableUsernameTo(inputAuthorizationData.getName(), users);
+            UserValidation.checkVerifyingPassword(inputAuthorizationData.getName(),
+                    inputAuthorizationData.getPassword(), users);
+            currentUser = users.get(inputAuthorizationData.getName());
+            System.out.println("Вы успешно авторизовались");
+        } catch (UserNotFoundException | InvalidPasswordException e) {
+            System.out.println(e.getMessage());
         }
     }
 
