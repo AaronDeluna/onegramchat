@@ -3,7 +3,13 @@ package com.javaacademy.onegramchat.chat;
 import com.javaacademy.onegramchat.entity.Message;
 import com.javaacademy.onegramchat.entity.MessageType;
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.*;
+import com.javaacademy.onegramchat.exceptions.InvalidPasswordException;
+import com.javaacademy.onegramchat.exceptions.MessageInputException;
+import com.javaacademy.onegramchat.exceptions.NoMessagesException;
+import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
+import com.javaacademy.onegramchat.exceptions.UserNotFoundException;
+import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
+import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
 import com.javaacademy.onegramchat.validation.InputAuthorizationData;
 import com.javaacademy.onegramchat.validation.InputMessageData;
 import com.javaacademy.onegramchat.validation.MessageValidation;
@@ -55,10 +61,9 @@ public class OneGramChat {
             checkSystemOccupiedAnotherUser(currentUser);
             System.out.println("-------Авторизация пользователя-------");
             InputAuthorizationData inputAuthorizationData = userInputData();
-            UserValidation.checkAvailableUsernameTo(inputAuthorizationData.getName(), users);
-            UserValidation.checkVerifyingPassword(inputAuthorizationData.getName(),
-                    inputAuthorizationData.getPassword(), users);
-            currentUser = users.get(inputAuthorizationData.getName());
+            User user = findUserByName(inputAuthorizationData.getName(), users);
+            UserValidation.checkVerifyingPassword(user, inputAuthorizationData.getPassword());
+            currentUser = user;
             System.out.println("Вы успешно авторизовались");
         } catch (UserAuthorizationException | UserNotFoundException | InvalidPasswordException e) {
             System.out.println(e.getMessage());
@@ -164,8 +169,6 @@ public class OneGramChat {
     /**
      * Выводит список сообщений текущего пользователя.
      *
-     * @throws UserAuthorizationException если пользователь не авторизован
-     * @throws NoMessagesException        если у пользователя нет сообщений
      */
     public void readMessage() {
         System.out.println("-------Список сообщений-------");
