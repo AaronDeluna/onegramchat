@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import static com.javaacademy.onegramchat.validation.UserValidation.checkSystemOccupiedAnotherUser;
-
 public class OneGramChat {
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -57,7 +55,7 @@ public class OneGramChat {
      */
     public void userLogin() {
         try {
-            checkSystemOccupiedAnotherUser(currentUser);
+            UserValidation.checkSystemOccupiedAnotherUser(currentUser);
             System.out.println("-------Авторизация пользователя-------");
             InputAuthorizationData inputAuthorizationData = userInputData();
             User user = findUserByName(inputAuthorizationData.getName(), users);
