@@ -49,6 +49,12 @@ public class OneGramChat {
      * При ошибках выводит сообщение и повторяет запрос.
      */
     public void userLogin() {
+        if (currentUser != null) {
+            System.out.printf("""
+                    Авторизация невозможна!
+                    Система уже занята пользователем по имени %s
+                    Сначала выполните выход пользователя из системы""", currentUser.getName());
+        }
         System.out.println("-------Авторизация пользователя-------");
         InputAuthorizationData inputAuthorizationData = userInputData();
         try {
