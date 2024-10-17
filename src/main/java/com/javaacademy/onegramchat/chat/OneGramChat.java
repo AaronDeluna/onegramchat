@@ -32,7 +32,7 @@ public class OneGramChat {
             try {
                 UserValidation.checkNotAvailableUsernameTo(inputAuthorizationData.getName(), users);
                 User user = new User(inputAuthorizationData.getName(), inputAuthorizationData.getPassword());
-                users.put(inputAuthorizationData.getName(), user);
+                users.put(user.getName(), user);
                 System.out.println("Пользователь успешно зарегистрировался под именем: " +
                         inputAuthorizationData.getName());
                 break;
