@@ -3,7 +3,13 @@ package com.javaacademy.onegramchat.chat;
 import com.javaacademy.onegramchat.entity.Message;
 import com.javaacademy.onegramchat.entity.MessageType;
 import com.javaacademy.onegramchat.entity.User;
-import com.javaacademy.onegramchat.exceptions.*;
+import com.javaacademy.onegramchat.exceptions.InvalidPasswordException;
+import com.javaacademy.onegramchat.exceptions.MessageInputException;
+import com.javaacademy.onegramchat.exceptions.NoMessagesException;
+import com.javaacademy.onegramchat.exceptions.UserAuthorizationException;
+import com.javaacademy.onegramchat.exceptions.UserNotFoundException;
+import com.javaacademy.onegramchat.exceptions.UserRegistrationException;
+import com.javaacademy.onegramchat.exceptions.ValidationInputDataException;
 import com.javaacademy.onegramchat.validation.InputAuthorizationData;
 import com.javaacademy.onegramchat.validation.InputMessageData;
 import com.javaacademy.onegramchat.validation.MessageValidation;
@@ -12,6 +18,8 @@ import com.javaacademy.onegramchat.validation.UserValidation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+
+import static com.javaacademy.onegramchat.validation.UserValidation.checkSystemOccupiedAnotherUser;
 
 public class OneGramChat {
 
@@ -32,9 +40,8 @@ public class OneGramChat {
             try {
                 UserValidation.checkNotAvailableUsernameTo(inputAuthorizationData.getName(), users);
                 User user = new User(inputAuthorizationData.getName(), inputAuthorizationData.getPassword());
-                users.put(inputAuthorizationData.getName(), user);
-                System.out.println("Пользователь успешно зарегистрировался под именем: " +
-                        inputAuthorizationData.getName());
+                users.put(user.getName(), user);
+                System.out.println("Пользователь успешно зарегистрировался под именем: " + user.getName());
                 break;
             } catch (UserRegistrationException e) {
                 System.out.println(e.getMessage());
@@ -49,22 +56,16 @@ public class OneGramChat {
      * При ошибках выводит сообщение и повторяет запрос.
      */
     public void userLogin() {
-        while (true) {
+        try {
+            checkSystemOccupiedAnotherUser(currentUser);
             System.out.println("-------Авторизация пользователя-------");
             InputAuthorizationData inputAuthorizationData = userInputData();
-            try {
-                UserValidation.checkAvailableUsernameTo(inputAuthorizationData.getName(), users);
-                UserValidation.checkVerifyingPassword(inputAuthorizationData.getName(),
-                        inputAuthorizationData.getPassword(), users);
-                currentUser = users.get(inputAuthorizationData.getName());
-                System.out.println("Вы успешно авторизовались");
-                break;
-            } catch (UserNotFoundException e) {
-                System.out.println(e.getMessage() + "\nЧтобы продолжить зарегистрируйтесь!");
-                createUser();
-            } catch (InvalidPasswordException e) {
-                System.out.println(e.getMessage());
-            }
+            User user = findUserByName(inputAuthorizationData.getName(), users);
+            UserValidation.checkVerifyingPassword(user, inputAuthorizationData.getPassword());
+            currentUser = user;
+            System.out.println("Вы успешно авторизовались");
+        } catch (UserAuthorizationException | UserNotFoundException | InvalidPasswordException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -75,9 +76,9 @@ public class OneGramChat {
      * Если пользователь не авторизован, выводит сообщение об этом.
      */
     public void logout() {
-        System.out.println("-------Выход пользователя-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
+            System.out.println("-------Выход пользователя-------");
             System.out.println("Пользователь " + currentUser.getName() + " успешно вышел");
             currentUser = null;
         } catch (UserAuthorizationException e) {
@@ -114,9 +115,9 @@ public class OneGramChat {
      * как исходящее для отправителя и входящее для получателя.
      */
     public void sendMessage() {
-        System.out.println("-------Отправка сообщения-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
+            System.out.println("-------Отправка сообщения-------");
             InputMessageData inputMessageData = inputMessage();
             User recipientUser = findUserByName(inputMessageData.getRecipientName(), users);
             currentUser.addMessage(new Message(inputMessageData.getMessageText(),
@@ -167,13 +168,11 @@ public class OneGramChat {
     /**
      * Выводит список сообщений текущего пользователя.
      *
-     * @throws UserAuthorizationException если пользователь не авторизован
-     * @throws NoMessagesException        если у пользователя нет сообщений
      */
     public void readMessage() {
-        System.out.println("-------Список сообщений-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
+            System.out.println("-------Список сообщений-------");
             MessageValidation.verifyUserMessages(currentUser);
             currentUser.getMessages().forEach(Message::print);
         } catch (UserAuthorizationException | NoMessagesException e) {
