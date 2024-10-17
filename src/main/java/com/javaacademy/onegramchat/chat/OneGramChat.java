@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import static com.javaacademy.onegramchat.validation.UserValidation.checkSystemOccupiedAnotherUser;
+
 public class OneGramChat {
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -49,21 +51,16 @@ public class OneGramChat {
      * При ошибках выводит сообщение и повторяет запрос.
      */
     public void userLogin() {
-        if (currentUser != null) {
-            System.out.printf("""
-                    Авторизация невозможна!
-                    Система уже занята пользователем по имени %s
-                    Сначала выполните выход пользователя из системы""", currentUser.getName());
-        }
-        System.out.println("-------Авторизация пользователя-------");
-        InputAuthorizationData inputAuthorizationData = userInputData();
         try {
+            checkSystemOccupiedAnotherUser(currentUser);
+            System.out.println("-------Авторизация пользователя-------");
+            InputAuthorizationData inputAuthorizationData = userInputData();
             UserValidation.checkAvailableUsernameTo(inputAuthorizationData.getName(), users);
             UserValidation.checkVerifyingPassword(inputAuthorizationData.getName(),
                     inputAuthorizationData.getPassword(), users);
             currentUser = users.get(inputAuthorizationData.getName());
             System.out.println("Вы успешно авторизовались");
-        } catch (UserNotFoundException | InvalidPasswordException e) {
+        } catch (UserAuthorizationException | UserNotFoundException | InvalidPasswordException e) {
             System.out.println(e.getMessage());
         }
     }

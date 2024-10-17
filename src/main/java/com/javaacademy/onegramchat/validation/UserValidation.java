@@ -84,4 +84,11 @@ public class UserValidation {
             throw new UserAuthorizationException("Вы не авторизованы!");
         }
     }
+
+    public static void checkSystemOccupiedAnotherUser(User currentUser) throws UserAuthorizationException {
+        if (currentUser != null) {
+            throw new UserAuthorizationException("Авторизация невозможна!\n" +
+                    "Система уже занята пользователем по имени " + currentUser.getName());
+        }
+    }
 }
