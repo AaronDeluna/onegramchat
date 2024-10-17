@@ -171,9 +171,9 @@ public class OneGramChat {
      *
      */
     public void readMessage() {
-        System.out.println("-------Список сообщений-------");
         try {
             UserValidation.checkUserAuthorization(currentUser);
+            System.out.println("-------Список сообщений-------");
             MessageValidation.verifyUserMessages(currentUser);
             currentUser.getMessages().forEach(Message::print);
         } catch (UserAuthorizationException | NoMessagesException e) {
